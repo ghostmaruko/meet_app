@@ -22,5 +22,10 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "vite": "^5.3.1"
-  }
+  },
+  "description": "# User story As a user,   I should be able to show or hide event details   So that I can choose how much information I want to see.",
+  "main": "vite.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
