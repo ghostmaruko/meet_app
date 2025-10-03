@@ -12,7 +12,7 @@ provider:
 
 functions:
   getAuthURL:
-    handler: handler.getAuthURL
+    handler: handler.js.getAuthURL
     events:
       - http:
           path: api/get-auth-url
