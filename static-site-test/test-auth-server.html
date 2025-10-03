@@ -1,53 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Test Auth Server</title>
+  <style>
+    #container {
+      max-width: 500px;
+      margin: 20px auto;
+      font-family: Arial, sans-serif;
+    }
+    h4 {
+      margin-top: 25px;
+    }
+    input {
+      width: 100%;
+      padding: 5px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    pre {
+      background-color: #f4f4f4;
+      padding: 10px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
 
-    <title>Test Auth Server</title>
-  </head>
+<body>
+<main id="container">
+  <h1>OAuth2 Test</h1>
 
-  <body>
-    <style>
-      #container {
-        max-width: 500px;
-      }
-      h4 {
-        margin-top: 25px;
-      }
-    </style>
+  <!-- STEP 1 -->
+  <h4><b>Step 1:</b> Get OAuth URL</h4>
+  <p>Click the button below to get your OAuth URL.</p>
+  <button id="getAuthUrlButton">Get OAuth URL</button>
+  <p id="result"></p>
+  <a id="authURL" href target="_blank">Click to authorize</a>
 
-    <main id="container">
-      <h1>OAuth2 Test</h1>
-      <h4><b>Step 1:</b> Get OAuth URL</h4>
-      <p>Click the button below to get your OAuth URL.</p>
-      <button id="getAuthUrlButton">Get OAuth URL</button>
-      <p id="result"></p>
-      <a id="authURL" href target="_blank">Click to authorize</a>
-    </main>
-    <!-- New line of Code for Script starts here -->
-    <script type="text/javascript">
-      const getAuthUrlButton = document.getElementById("getAuthUrlButton");
-      const resultElement = document.getElementById("result");
-      const resultLink = document.getElementById("authURL");
-      const getAuthURL =
-        "https://nafbo9hqr8.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url";
+  <!-- STEP 2 -->
+  <h4>Step 2: Get your code and exchange for an access token</h4>
+  <p>After you’re redirected back to your Meet app on GitHub, copy the code from the URI.</p>
+  <label>
+    Code input
+    <input id="code" type="text" value="" />
+  </label>
+  <button id="getToken">Get Token</button>
+  <p id="accessToken"></p>
 
-      getAuthUrlButton.onclick = function () {
-        fetch(getAuthURL)
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (json) {
-            const result = JSON.stringify(json);
-            // we get the value of authUrl
-            const { authUrl } = JSON.parse(result);
-            // then add it to the html
-            resultElement.innerText = result;
-            resultLink.href = authUrl;
-          });
-      };
-    </script>
-  </body>
+  <!-- STEP 3 -->
+  <h4>Step 3: Use your access token to get events</h4>
+  <p>Paste the access token below and click to get events.</p>
+  <label>
+    Access Token input
+    <input id="token" type="text" value="" />
+  </label>
+  <button id="getEvents">Get Events</button>
+  <pre id="events"></pre>
+</main>
+
+<script type="text/javascript">
+  // --------------------- STEP 1
+  const getAuthUrlButton = document.getElementById("getAuthUrlButton");
+  const resultElement = document.getElementById("result");
+  const resultLink = document.getElementById("authURL");
+  const getAuthURL = "https://nafbo9hqr8.execute-api.eu-central-1.amazonaws.com/dev/api/get-auth-url";
+
+  getAuthUrlButton.onclick = function () {
+    fetch(getAuthURL)
+      .then((response) => response.json())
+      .then((json) => {
+        const { authUrl } = json;
+        resultElement.innerText = JSON.stringify(json, null, 2);
+        resultLink.href = authUrl;
+      })
+      .catch((err) => {
+        resultElement.innerText = `Error: ${err.message}`;
+      });
+  };
+  // --------------------- END OF STEP 1
+
+  // --------------------- STEP 2
+  const codeValue = document.getElementById("code");
+  const getAccessTokenButton = document.getElementById("getToken");
+  const accessTokenElement = document.getElementById("accessToken");
+  const getTokenEndpoint = "https://nafbo9hqr8.execute-api.eu-central-1.amazonaws.com/dev/api/token";
+
+  getAccessTokenButton.onclick = function () {
+    let code = codeValue.value;
+    if (!code) {
+      alert("Please enter the code first.");
+      return;
+    }
+
+    // URL-encode if not already encoded
+    if (decodeURIComponent(code) === code) {
+      code = encodeURIComponent(code);
+    }
+
+    const getTokenRequest = `${getTokenEndpoint}/${code}`;
+    fetch(getTokenRequest)
+      .then((response) => response.json())
+      .then((json) => {
+        accessTokenElement.innerText = JSON.stringify(json, null, 2);
+        // automatically fill Step 3 input
+        document.getElementById("token").value = json.access_token;
+      })
+      .catch((err) => {
+        accessTokenElement.innerText = `Error: ${err.message}`;
+      });
+  };
+  // --------------------- END OF STEP 2
+
+  // --------------------- STEP 3
+  const tokenValue = document.getElementById("token");
+  const getEventsButton = document.getElementById("getEvents");
+  const eventsElement = document.getElementById("events");
+  const getEventsEndpoint = "https://nafbo9hqr8.execute-api.eu-central-1.amazonaws.com/dev/api/calendar-events";
+
+  getEventsButton.onclick = function () {
+    const accessToken = tokenValue.value;
+    if (!accessToken) {
+      alert("Please enter the access token first.");
+      return;
+    }
+
+    fetch(`${getEventsEndpoint}?access_token=${accessToken}`)
+      .then((res) => res.json())
+      .then((json) => {
+        eventsElement.innerText = JSON.stringify(json, null, 2);
+      })
+      .catch((err) => {
+        eventsElement.innerText = `Error: ${err.message}`;
+      });
+  };
+  // --------------------- END OF STEP 3
+</script>
+</body>
 </html>
