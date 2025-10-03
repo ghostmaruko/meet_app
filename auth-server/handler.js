@@ -69,3 +69,40 @@ module.exports.getAccessToken = async (event) => {
       };
     });
 };
+
+module.exports.getCalendarEvents = async (event) => {
+  const { access_token } = event.pathParameters;
+
+  const oAuth2Client = new google.auth.OAuth2(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    process.env.REDIRECT_URI
+  );
+
+  oAuth2Client.setCredentials({ access_token });
+
+  return new Promise((resolve, reject) => {
+    const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+    const CALENDAR_ID = "fullstackwebdev@gmail.com"; // inserisci il tuo calendario pubblico
+
+    calendar.events.list(
+      {
+        calendarId: CALENDAR_ID,
+        timeMin: new Date().toISOString(),
+        singleEvents: true,
+        orderBy: "startTime",
+      },
+      (error, response) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({
+            statusCode: 200,
+            headers: { "Access-Control-Allow-Origin": "*" },
+            body: JSON.stringify({ events: response.data.items }),
+          });
+        }
+      }
+    );
+  });
+};
