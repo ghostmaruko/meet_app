@@ -1,4 +1,4 @@
-service: meet-auth-server  # nome del progetto
+service: auth-server
 
 provider:
   name: aws
@@ -12,7 +12,7 @@ provider:
 
 functions:
   getAuthURL:
-    handler: handler.js.getAuthURL
+    handler: handler.getAuthURL
     events:
       - http:
           path: api/get-auth-url
