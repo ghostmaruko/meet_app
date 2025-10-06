@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 
-
-const CitySearch = ({ allLocations }) => {
+const CitySearch = ({ allLocations, onCitySelect }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // ✅ Questa è la funzione mancante
+  // Funzione per input change
   const handleInputChanged = (event) => {
     const value = event.target.value;
     setQuery(value);
@@ -18,11 +17,14 @@ const CitySearch = ({ allLocations }) => {
     setSuggestions(filteredSuggestions);
   };
 
-  // ✅ Funzione per click sui suggerimenti
+  // Funzione per click sui suggerimenti
   const handleItemClicked = (event) => {
     const value = event.target.textContent;
     setQuery(value);
     setShowSuggestions(false);
+    if (onCitySelect) {
+      onCitySelect(value); //passa la città selezionata ad App
+    }
   };
 
   return (
