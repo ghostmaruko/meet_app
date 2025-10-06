@@ -1,33 +1,17 @@
 {
-  "name": "meet",
+  "name": "auth-server",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "commonjs",
+  "main": "handler.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "test": "jest"
+    "deploy": "sls deploy"
   },
   "dependencies": {
-    "googleapis": "^118.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "googleapis": "^118.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.34.2",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.7",
-    "vite": "^5.3.1"
-  },
-  "description": "# User story As a user,   I should be able to show or hide event details   So that I can choose how much information I want to see.",
-  "main": "vite.config.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "serverless": "^3.38.0",
+    "serverless-offline": "^12.0.4"
+  }
 }
