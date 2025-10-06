@@ -1,7 +1,12 @@
 import React from "react";
 
+import EventList from "./components/EventList";
 const App = () => {
-  return <div></div>;
+  return (
+    <div className="App">
+      <EventList />
+    </div>
+  );
 };
 
 export default App;
