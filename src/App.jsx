@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 import EventList from "./components/EventList";
 import CitySearch from "./components/CitySearch";
+import NumberOfEvents from "./components/NumberOfEvents";
 
-// Esempio con props.events, altrimenti default vuoto
-const App = ({ events = [] }) => {
+const App = ({ events = [], allLocations = [] }) => {
   const [query, setQuery] = useState("");
+  const [number, setNumber] = useState(32);
 
-  const handleCityChange = (e) => {
-    setQuery(e.target.value);
-    // eventualmente filtrare eventi in base alla città
+  const handleCitySelect = (city) => {
+    setQuery(city);
+  };
+
+  const handleNumberChange = (value) => {
+    setNumber(value);
   };
 
   return (
     <div className="App">
-      <CitySearch query={query} onChange={handleCityChange} />
+      <CitySearch allLocations={allLocations} onCitySelect={handleCitySelect} />
+      <NumberOfEvents defaultNumber={number} onNumberChange={handleNumberChange} />
       <EventList events={events} />
     </div>
   );

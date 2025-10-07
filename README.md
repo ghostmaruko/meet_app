@@ -73,3 +73,13 @@ Then the user should see a pie chart with the percentage of events by genre
 
 
 
+## Uso dell’AI per questa task
+
+Durante questa task ho utilizzato ChatGPT (AI) come supporto per:
+
+- Scrivere test unitari usando React Testing Library
+- Gestire l’interazione utente (click, input)
+- Analizzare e correggere errori Jest
+- Creare mock dei dati in linea con i componenti
+- Assicurare copertura 100% su tutti i componenti principali
+- Ho poi adattato tutti i suggerimenti al mio progetto, verificando manualmente i test e correggendo la struttura dei componenti dove necessario.
