@@ -1,63 +1,72 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  within,
+  waitFor,
+} from "@testing-library/react";
 import EventList from "../components/EventList";
-import Event from "../components/Event";
+import App from "../App";
+import mockData from "../mock-data"; // Import corretto del tuo mock-data
 
-// Mock degli eventi
-const mockEvents = [
-  {
-    id: 1,
-    summary: "Learn JavaScript",
-    created: "2020-05-19T19:17:46.000Z",
-    location: "London, UK",
-    description:
-      "Have you wondered how you can ask Google to show you the list of the top ten must-see places in London?"
-  },
-  {
-    id: 2,
-    summary: "React Workshop",
-    created: "2020-06-10T14:00:00.000Z",
-    location: "Berlin, DE",
-    description: "Learn React from scratch in this hands-on workshop."
-  }
-];
+// Assicuriamoci che gli id siano stringhe per evitare warning di PropTypes
+const formattedMockData = mockData.map(event => ({
+  ...event,
+  id: String(event.id || event.etag || Math.random()),
+}));
 
 describe("<EventList /> component", () => {
   test('renders a list with role="list"', () => {
-    render(<EventList events={mockEvents} />);
+    render(<EventList events={formattedMockData.slice(0, 2)} />);
     const list = screen.getByRole("list");
     expect(list).toBeInTheDocument();
   });
 
   test("renders correct number of events", async () => {
-    render(<EventList events={mockEvents} />);
+    render(<EventList events={formattedMockData.slice(0, 2)} />);
     const items = await screen.findAllByRole("listitem");
-    expect(items).toHaveLength(mockEvents.length);
+    expect(items).toHaveLength(2);
   });
 
   test("can show and hide event details", async () => {
-    render(<EventList events={mockEvents} />);
+    render(<EventList events={formattedMockData.slice(0, 1)} />);
 
-    // Trova il pulsante "Show Details" del primo evento
-    const showButtons = screen.getAllByRole("button", { name: /show details/i });
-    fireEvent.click(showButtons[0]);
+    // Trova il pulsante "Show Details"
+    const showButton = screen.getByRole("button", { name: /show details/i });
+    fireEvent.click(showButton);
 
     // Controlla che i dettagli siano visibili
-    expect(
-      screen.getByText(
-        /have you wondered how you can ask google to show you the list/i
-      )
-    ).toBeInTheDocument();
+    expect(screen.getByText(/have you wondered/i)).toBeInTheDocument();
 
     // Controlla il cambio del testo del bottone
     const hideButton = screen.getByRole("button", { name: /hide details/i });
     fireEvent.click(hideButton);
 
     // I dettagli devono sparire
-    expect(
-      screen.queryByText(
-        /have you wondered how you can ask google to show you the list/i
-      )
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/have you wondered/i)).not.toBeInTheDocument();
+  });
+
+  test("renders a list of 32 events when the app is mounted and rendered", async () => {
+    const AppComponent = render(<App />);
+    const AppDOM = AppComponent.container.firstChild;
+    const EventListDOM = AppDOM.querySelector("#event-list");
+    await waitFor(() => {
+      const EventListItems = within(EventListDOM).queryAllByRole("listitem");
+      expect(EventListItems.length).toBe(32);
+    });
+  });
+});
+
+describe('<EventList /> integration', () => {
+  test('renders a list of events when the app is mounted and rendered', async () => {
+    const AppComponent = render(<App />);
+    const AppDOM = AppComponent.container.firstChild;
+    const EventListDOM = AppDOM.querySelector('#event-list');
+
+    await waitFor(() => {
+      const EventListItems = within(EventListDOM).queryAllByRole('listitem');
+      expect(EventListItems.length).toBeGreaterThan(0); // oppure `.toBe(32);`
+    });
   });
 });

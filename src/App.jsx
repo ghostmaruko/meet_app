@@ -1,25 +1,25 @@
 import React, { useState } from "react";
 import EventList from "./components/EventList";
-import CitySearch from "./components/CitySearch";
 import NumberOfEvents from "./components/NumberOfEvents";
+import mockData from "./mock-data";
 
-const App = ({ events = [], allLocations = [] }) => {
-  const [query, setQuery] = useState("");
-  const [number, setNumber] = useState(32);
+const App = () => {
+  const [events, setEvents] = useState(mockData);
+  const [numberOfEvents, setNumberOfEvents] = useState(32);
 
-  const handleCitySelect = (city) => {
-    setQuery(city);
-  };
-
-  const handleNumberChange = (value) => {
-    setNumber(value);
+  const handleNumberChange = (num) => {
+    setNumberOfEvents(num);
   };
 
   return (
     <div className="App">
-      <CitySearch allLocations={allLocations} onCitySelect={handleCitySelect} />
-      <NumberOfEvents defaultNumber={number} onNumberChange={handleNumberChange} />
-      <EventList events={events} />
+      <div id="number-of-events">
+        <NumberOfEvents
+          defaultNumber={numberOfEvents}
+          onNumberChange={handleNumberChange}
+        />
+      </div>
+      <EventList events={events.slice(0, numberOfEvents)} />
     </div>
   );
 };
