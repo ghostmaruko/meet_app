@@ -1,10 +1,16 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import App from "../App";
 import mockData from "../mock-data"; // Import corretto
 
 // Trasformiamo gli id in stringhe per evitare warning PropTypes
-const formattedMockData = mockData.map(event => ({
+const formattedMockData = mockData.map((event) => ({
   ...event,
   id: String(event.id || event.etag || Math.random()),
 }));
@@ -45,7 +51,9 @@ describe("<App /> integration", () => {
 
   test("user can change number of events displayed", async () => {
     const AppComponent = render(<App />);
-    const numberInput = screen.getByRole("spinbutton", { name: /number of events/i });
+    const numberInput = screen.getByRole("spinbutton", {
+      name: /number of events/i,
+    });
 
     // Cambiamo il numero di eventi da 32 a 10
     fireEvent.change(numberInput, { target: { value: 10 } });
@@ -57,5 +65,10 @@ describe("<App /> integration", () => {
       const items = within(EventListDOM).queryAllByRole("listitem");
       expect(items.length).toBe(10);
     });
+  });
+  test("filters events based on selected city", async () => {
+    render(<App />);
+    const cityInput = screen.getByPlaceholderText("Search for a city");
+    fireEvent.change(cityInput, { target: { value: "Berlin" } });
   });
 });
