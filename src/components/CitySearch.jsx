@@ -52,7 +52,7 @@ const CitySearch = ({ allLocations = [], onCitySelect }) => {
               {suggestion}
             </li>
           ))}
-          <li key="all" onClick={() => handleItemClicked({ target: { textContent: "" } })}>
+          <li key="all" role="option" onClick={() => handleItemClicked({ target: { textContent: "" } })}>
             <b>See all cities</b>
           </li>
         </ul>
