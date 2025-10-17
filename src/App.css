@@ -1,6 +1,6 @@
 /* ======== Global Styles ======== */
 body {
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: #f6f8fa;
   margin: 0;
   padding: 0;
@@ -88,6 +88,15 @@ button {
 
 button:hover {
   background-color: #005ea6;
+}
+
+/* ======== Alerts ======== */
+.alerts-container {
+  position: fixed;
+  top: 0px;
+  left: 20px;
+  width: 250px;
+  z-index: 1000;
 }
 
 /* ======== Responsive ======== */

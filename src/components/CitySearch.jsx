@@ -1,12 +1,12 @@
+// src/components/CitySearch.jsx
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-const CitySearch = ({ allLocations = [], onCitySelect }) => {
+const CitySearch = ({ allLocations = [], onCitySelect, setInfoAlert }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Quando l'utente digita
   const handleInputChanged = (event) => {
     const value = event.target.value;
     setQuery(value);
@@ -16,16 +16,21 @@ const CitySearch = ({ allLocations = [], onCitySelect }) => {
     );
     setSuggestions(filteredSuggestions);
 
-    // chiama anche il parent con la città (utile per filtri live)
+    let infoText = "";
+    if (filteredSuggestions.length === 0) {
+      infoText = "We cannot find the city you’re looking for. Please try another city.";
+    }
+    setInfoAlert(infoText);
+
     onCitySelect(value);
   };
 
-  // Quando l'utente clicca su una città
   const handleItemClicked = (event) => {
     const value = event.target.textContent;
     setQuery(value);
     setShowSuggestions(false);
-    onCitySelect(value); // passa la città al componente padre (App)
+    onCitySelect(value);
+    setInfoAlert(""); // rimuove l'alert quando clicchi su un suggerimento valido
   };
 
   return (
@@ -52,7 +57,11 @@ const CitySearch = ({ allLocations = [], onCitySelect }) => {
               {suggestion}
             </li>
           ))}
-          <li key="all" role="option" onClick={() => handleItemClicked({ target: { textContent: "" } })}>
+          <li
+            key="all"
+            role="option"
+            onClick={() => handleItemClicked({ target: { textContent: "" } })}
+          >
             <b>See all cities</b>
           </li>
         </ul>
@@ -64,6 +73,7 @@ const CitySearch = ({ allLocations = [], onCitySelect }) => {
 CitySearch.propTypes = {
   allLocations: PropTypes.arrayOf(PropTypes.string),
   onCitySelect: PropTypes.func.isRequired,
+  setInfoAlert: PropTypes.func.isRequired,
 };
 
 export default CitySearch;
