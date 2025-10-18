@@ -9,32 +9,36 @@ class Alert extends Component {
     this.bgColor = null;
   }
 
-  getStyle = () => ({
-    color: this.color,
-    backgroundColor: this.bgColor,
-    borderWidth: "2px",
-    borderStyle: "solid",
-    borderColor: this.color,
-    fontWeight: "bolder",
-    borderRadius: "7px",
-    textAlign: "center",
-    fontSize: "12px",
-    margin: "10px 0",
-    padding: "10px",
-  });
+  getStyle = () => {
+    return {
+      color: this.color,
+      backgroundColor: this.bgColor,
+      borderWidth: "2px",
+      borderStyle: "solid",
+      fontWeight: "bolder",
+      borderRadius: "7px",
+      borderColor: this.color,
+      textAlign: "center",
+      fontSize: "12px",
+      margin: "10px 0",
+      padding: "10px",
+    };
+  };
 
   render() {
-    const { text } = this.props;
-    if (!text) return null; // Non mostrare nulla se testo vuoto
-    return <p style={this.getStyle()}>{text}</p>;
+    return (
+      <div className="Alert">
+        <p style={this.getStyle()}>{this.props.text}</p>
+      </div>
+    );
   }
 }
 
 Alert.propTypes = {
-  text: PropTypes.string,
+  text: PropTypes.string.isRequired,
 };
 
-// Subclass InfoAlert (blue)
+// Subclass per InfoAlert (blu)
 class InfoAlert extends Alert {
   constructor(props) {
     super(props);
@@ -43,7 +47,7 @@ class InfoAlert extends Alert {
   }
 }
 
-// Subclass WarningAlert (yellow)
+// Subclass per WarningAlert (arancione)
 class WarningAlert extends Alert {
   constructor(props) {
     super(props);
@@ -52,7 +56,7 @@ class WarningAlert extends Alert {
   }
 }
 
-// Subclass ErrorAlert (red)
+// Subclass per ErrorAlert (rosso)
 class ErrorAlert extends Alert {
   constructor(props) {
     super(props);
