@@ -1,14 +1,8 @@
-
 import mockData from './mock-data';
-
+import NProgress from 'nprogress';
 
 /**
- *
- * @param {*} events:
- * The following function should be in the “api.js” file.
- * This function takes an events array, then uses map to create a new array with only locations.
- * It will also remove all duplicates by creating another new array using the spread operator and spreading a Set.
- * The Set will remove all duplicates from the array.
+ * Estrae tutte le location dagli eventi e rimuove duplicati
  */
 export const extractLocations = (events) => {
   const extractedLocations = events.map((event) => event.location);
@@ -16,11 +10,33 @@ export const extractLocations = (events) => {
   return locations;
 };
 
-
 /**
- *
- * This function will fetch the list of all events
+ * Recupera tutti gli eventi con gestione offline/online e cache
  */
 export const getEvents = async () => {
-  return mockData;
+  NProgress.start();
+
+  // Se offline, carica i dati dalla cache
+  if (!navigator.onLine) {
+    const cachedEvents = localStorage.getItem('lastEvents');
+    NProgress.done();
+    return cachedEvents ? JSON.parse(cachedEvents) : [];
+  }
+
+  // Se online, recupera i dati dall'API o dal mock
+  try {
+    const result = mockData; // Sostituire con fetch(url) per API reale
+    if (result) {
+      localStorage.setItem('lastEvents', JSON.stringify(result));
+      NProgress.done();
+      return result;
+    } else {
+      NProgress.done();
+      return [];
+    }
+  } catch (error) {
+    console.error('Errore recupero eventi:', error);
+    NProgress.done();
+    return [];
+  }
 };
