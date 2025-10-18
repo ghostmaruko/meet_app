@@ -7,56 +7,32 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       manifest: {
-        short_name: "React App",
-        name: "Create React App Sample",
+        short_name: "Meet",
+        name: "Meet App",
         icons: [
           {
-            src: "favicon.ico",
-            sizes: "48x48",
-            type: "image/x-icon",
-            purpose: "maskable",
-          },
-          {
             src: "meet-app-144.png",
-            type: "image/png",
             sizes: "144x144",
-            purpose: "any",
+            type: "image/png",
           },
           {
             src: "meet-app-192.png",
-            type: "image/png",
             sizes: "192x192",
-            purpose: "maskable",
+            type: "image/png",
           },
           {
             src: "meet-app-512.png",
-            type: "image/png",
             sizes: "512x512",
-            purpose: "maskable",
+            type: "image/png",
           },
         ],
         start_url: ".",
         display: "standalone",
-        theme_color: "#000000",
         background_color: "#ffffff",
-      },
-      srcDir: "src", // Update if your service-worker.js is elsewhere
-      filename: "service-worker.js", // Ensure it's accessible in production
-      registerType: "autoUpdate",
-      workbox: {
-        runtimeCaching: [
-          {
-            urlPattern: /\/.*\.png$/, // Example pattern for caching png images
-            handler: "StaleWhileRevalidate",
-            options: {
-              cacheName: "images",
-              expiration: {
-                maxEntries: 50,
-              },
-            },
-          },
-        ],
+        theme_color: "#000000",
       },
     }),
   ],
