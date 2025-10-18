@@ -14,22 +14,22 @@ export default defineConfig({
         name: "Meet App",
         icons: [
           {
-            src: "meet-app-144.png",
+            src: "/meet-app-144.png",
             sizes: "144x144",
             type: "image/png",
           },
           {
-            src: "meet-app-192.png",
+            src: "/meet-app-192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "meet-app-512.png",
+            src: "/meet-app-512.png",
             sizes: "512x512",
             type: "image/png",
           },
         ],
-        start_url: ".",
+        start_url: "/",
         display: "standalone",
         background_color: "#ffffff",
         theme_color: "#000000",
