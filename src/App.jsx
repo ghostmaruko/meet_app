@@ -4,7 +4,7 @@ import EventList from "./components/EventList";
 import NumberOfEvents from "./components/NumberOfEvents";
 import CitySearch from "./components/CitySearch";
 import mockData from "./mock-data";
-import { InfoAlert } from "./components/Alert";
+import { InfoAlert, WarningAlert, ErrorAlert } from "./components/Alert";
 import "./App.css";
 
 const App = () => {
@@ -12,6 +12,8 @@ const App = () => {
   const [numberOfEvents, setNumberOfEvents] = useState(32);
   const [selectedCity, setSelectedCity] = useState("");
   const [infoAlert, setInfoAlert] = useState("");
+  const [warningAlert, setWarningAlert] = useState("");
+  const [errorAlert, setErrorAlert] = useState("");
 
   // Ottieni lista unica di città
   const allLocations = [...new Set(mockData.map((event) => event.location))];
@@ -33,6 +35,8 @@ const App = () => {
     <div className="App">
       <div className="alerts-container">
         {infoAlert.length > 0 && <InfoAlert text={infoAlert} />}
+        {warningAlert.length > 0 && <WarningAlert text={warningAlert} />}
+        {errorAlert.length > 0 && <ErrorAlert text={errorAlert} />}
       </div>
 
       <CitySearch
@@ -44,6 +48,8 @@ const App = () => {
       <NumberOfEvents
         defaultNumber={numberOfEvents}
         onNumberChange={handleNumberChange}
+        setWarningAlert={setWarningAlert}
+        setErrorAlert={setErrorAlert}
       />
 
       <EventList events={filteredEvents.slice(0, numberOfEvents)} />
