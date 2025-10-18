@@ -1,5 +1,6 @@
-import mockData from './mock-data';
-import NProgress from 'nprogress';
+// src/api.js
+import mockData from "./mock-data";
+import NProgress from "nprogress";
 
 /**
  * Estrae tutte le location dagli eventi e rimuove duplicati
@@ -18,7 +19,7 @@ export const getEvents = async () => {
 
   // Se offline, carica i dati dalla cache
   if (!navigator.onLine) {
-    const cachedEvents = localStorage.getItem('lastEvents');
+    const cachedEvents = localStorage.getItem("lastEvents");
     NProgress.done();
     return cachedEvents ? JSON.parse(cachedEvents) : [];
   }
@@ -27,7 +28,8 @@ export const getEvents = async () => {
   try {
     const result = mockData; // Sostituire con fetch(url) per API reale
     if (result) {
-      localStorage.setItem('lastEvents', JSON.stringify(result));
+      // Salva sempre in localStorage
+      localStorage.setItem("lastEvents", JSON.stringify(result));
       NProgress.done();
       return result;
     } else {
@@ -35,8 +37,11 @@ export const getEvents = async () => {
       return [];
     }
   } catch (error) {
-    console.error('Errore recupero eventi:', error);
+    console.error("Errore recupero eventi:", error);
+
+    // In caso di errore fetch, prova a leggere dalla cache
+    const cachedEvents = localStorage.getItem("lastEvents");
     NProgress.done();
-    return [];
+    return cachedEvents ? JSON.parse(cachedEvents) : [];
   }
 };
