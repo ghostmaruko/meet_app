@@ -17,12 +17,12 @@ const EventItem = ({ event }) => {
   return (
     <li className="event-item">
       <h3>{event.summary}</h3>
-      <p className="event-time">
+      <p>
         {event.start?.dateTime
           ? new Date(event.start.dateTime).toLocaleString()
           : ""}
       </p>
-      <p className="event-location">{event.location}</p>
+      <p>{event.location}</p>
 
       <div className="event-actions">
         <a href={event.htmlLink} target="_blank" rel="noopener noreferrer">
@@ -36,9 +36,7 @@ const EventItem = ({ event }) => {
         </button>
       </div>
 
-      {showDetails && (
-        <p className="event-description">{event.description}</p>
-      )}
+      {showDetails && <p>{event.description}</p>}
     </li>
   );
 };

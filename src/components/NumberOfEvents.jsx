@@ -2,62 +2,75 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 const NumberOfEvents = ({
-  defaultNumber = 32,
   onNumberChange,
   setWarningAlert,
   setErrorAlert,
 }) => {
-  const [number, setNumber] = useState(defaultNumber);
+  const [number, setNumber] = useState("");
 
   useEffect(() => {
-    onNumberChange(number);
+    if (number !== "") {
+      onNumberChange(number);
+    }
   }, [number, onNumberChange]);
 
   const handleChange = (e) => {
-    const value = parseInt(e.target.value, 10);
+    const value = e.target.value;
 
-    if (isNaN(value)) {
-      setErrorAlert("Please enter a valid number.");
+    // Se non è un numero → errore
+    if (value === "" || isNaN(Number(value))) {
+      setErrorAlert("Inserisci un numero valido.");
       setWarningAlert("");
+      setNumber("");
       return;
     }
 
-    if (value <= 0) {
-      setWarningAlert("Please enter a number greater than zero.");
+    const numericValue = parseInt(value, 10);
+
+    // Valore <=0 → warning
+    if (numericValue <= 0) {
+      setWarningAlert("Inserisci un numero maggiore di zero.");
       setErrorAlert("");
+      setNumber(numericValue);
       return;
     }
 
-    if (value > 100) {
-      setErrorAlert("Number too large. Please enter 100 or less.");
+    // Valore troppo grande → errore
+    if (numericValue > 100) {
+      setErrorAlert("Numero troppo grande. Inserisci 100 o meno.");
       setWarningAlert("");
+      setNumber(numericValue);
       return;
     }
 
-    setErrorAlert("");
+    // Tutto valido
     setWarningAlert("");
-    setNumber(value);
+    setErrorAlert("");
+    setNumber(numericValue);
   };
 
   return (
     <div id="number-of-events">
-      <label htmlFor="number-input">Number of Events:</label>
+      <label htmlFor="number-input">Numero di Eventi:</label>
       <input
         id="number-input"
         type="number"
-        aria-label="number of events"
+        placeholder="Inserisci numero"
         value={number}
         onChange={handleChange}
+        aria-label="numero di eventi"
+        min={1}
+        max={100}
       />
     </div>
   );
 };
 
 NumberOfEvents.propTypes = {
-  defaultNumber: PropTypes.number,
   onNumberChange: PropTypes.func.isRequired,
   setWarningAlert: PropTypes.func.isRequired,
   setErrorAlert: PropTypes.func.isRequired,
+  
 };
 
 export default NumberOfEvents;

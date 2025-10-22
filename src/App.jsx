@@ -11,15 +11,16 @@ import "./App.css";
 
 const App = () => {
   const [events, setEvents] = useState([]);
-  const [numberOfEvents, setNumberOfEvents] = useState(32);
   const [selectedCity, setSelectedCity] = useState("");
   const [allLocations, setAllLocations] = useState([]);
-
   const [infoAlert, setInfoAlert] = useState("");
   const [warningAlert, setWarningAlert] = useState("");
   const [errorAlert, setErrorAlert] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
+  const [numberOfEvents, setNumberOfEvents] = useState(4); // default iniziale
+
+  // === Fetch eventi ===
   const fetchData = async () => {
     try {
       const result = await getEvents();
@@ -40,65 +41,81 @@ const App = () => {
 
   useEffect(() => {
     if (!navigator.onLine) {
-      setWarningAlert("Sei offline: gli eventi potrebbero non essere aggiornati.");
+      setWarningAlert(
+        "Sei offline: gli eventi potrebbero non essere aggiornati."
+      );
     } else {
       setWarningAlert("");
     }
     fetchData();
-  }, [selectedCity, numberOfEvents]);
+  }, []);
 
+  // === Filtra eventi per città e numero di eventi ===
   const filteredEvents = selectedCity
     ? events.filter((event) => event.location === selectedCity)
     : events;
 
+  const displayedEvents = filteredEvents.slice(0, numberOfEvents);
+
+  // === Handlers ===
   const handleCitySelect = (city) => setSelectedCity(city);
   const handleNumberChange = (num) => setNumberOfEvents(num);
 
   return (
     <div className="App">
+      {/* === Alerts === */}
       <div className="alerts-container">
         {infoAlert && <InfoAlert text={infoAlert} />}
         {warningAlert && <WarningAlert text={warningAlert} />}
         {errorAlert && <ErrorAlert text={errorAlert} />}
       </div>
 
-      <CitySearch
-        allLocations={allLocations}
-        setInfoAlert={setInfoAlert}
-        onCitySelect={handleCitySelect}
-      />
-      <NumberOfEvents
-        defaultNumber={numberOfEvents}
-        onNumberChange={handleNumberChange}
-        setWarningAlert={setWarningAlert}
-        setErrorAlert={setErrorAlert}
-      />
+      {/* === Controlli === */}
+      <div id="search-number-container">
+        <CitySearch
+          allLocations={allLocations}
+          setInfoAlert={setInfoAlert}
+          onCitySelect={handleCitySelect}
+        />
+        <NumberOfEvents
+          onNumberChange={handleNumberChange}
+          setWarningAlert={setWarningAlert}
+          setErrorAlert={setErrorAlert}
+        />
+      </div>
 
+      {/* === Stato di caricamento === */}
       {isLoading && <p className="loading-text">Caricamento eventi...</p>}
 
-      {!isLoading && filteredEvents.length > 0 && (
+      {/* === Grafici e lista eventi === */}
+      {!isLoading && displayedEvents.length > 0 && (
         <>
           <div className="charts-container">
             <div>
               <h3 className="chart-title">Eventi per Città</h3>
               <CityPieChart events={events} />
             </div>
+
             <div>
               <h3 className="chart-title">Distribuzione Eventi</h3>
               <CityEventsChart events={events} />
             </div>
+
             <div>
               <h3 className="chart-title">Partecipanti per Evento</h3>
               <EventParticipantsChart events={events} />
             </div>
           </div>
 
-          <EventList events={filteredEvents.slice(0, numberOfEvents)} />
+          <EventList events={displayedEvents} />
         </>
       )}
 
-      {!isLoading && filteredEvents.length === 0 && (
-        <p className="no-events-text">Nessun evento disponibile per questa città.</p>
+      {/* === Nessun evento disponibile === */}
+      {!isLoading && displayedEvents.length === 0 && (
+        <p className="no-events-text">
+          Nessun evento disponibile per questa città.
+        </p>
       )}
     </div>
   );
