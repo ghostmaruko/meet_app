@@ -20,7 +20,6 @@ const App = () => {
   const [errorAlert, setErrorAlert] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // === Fetch eventi e gestisci connessione ===
   const fetchData = async () => {
     try {
       const result = await getEvents();
@@ -41,34 +40,28 @@ const App = () => {
 
   useEffect(() => {
     if (!navigator.onLine) {
-      setWarningAlert(
-        "Sei offline: gli eventi potrebbero non essere aggiornati."
-      );
+      setWarningAlert("Sei offline: gli eventi potrebbero non essere aggiornati.");
     } else {
       setWarningAlert("");
     }
     fetchData();
   }, [selectedCity, numberOfEvents]);
 
-  // === Filtra eventi per città ===
   const filteredEvents = selectedCity
     ? events.filter((event) => event.location === selectedCity)
     : events;
 
-  // === Handlers ===
   const handleCitySelect = (city) => setSelectedCity(city);
   const handleNumberChange = (num) => setNumberOfEvents(num);
 
   return (
     <div className="App">
-      {/* === Alerts === */}
       <div className="alerts-container">
         {infoAlert && <InfoAlert text={infoAlert} />}
         {warningAlert && <WarningAlert text={warningAlert} />}
         {errorAlert && <ErrorAlert text={errorAlert} />}
       </div>
 
-      {/* === Controlli di ricerca === */}
       <CitySearch
         allLocations={allLocations}
         setInfoAlert={setInfoAlert}
@@ -81,10 +74,8 @@ const App = () => {
         setErrorAlert={setErrorAlert}
       />
 
-      {/* === Stato di caricamento === */}
       {isLoading && <p className="loading-text">Caricamento eventi...</p>}
 
-      {/* === Grafici + Lista eventi === */}
       {!isLoading && filteredEvents.length > 0 && (
         <>
           <div className="charts-container">
@@ -92,12 +83,10 @@ const App = () => {
               <h3 className="chart-title">Eventi per Città</h3>
               <CityPieChart events={events} />
             </div>
-
             <div>
               <h3 className="chart-title">Distribuzione Eventi</h3>
               <CityEventsChart events={events} />
             </div>
-
             <div>
               <h3 className="chart-title">Partecipanti per Evento</h3>
               <EventParticipantsChart events={events} />
@@ -108,11 +97,8 @@ const App = () => {
         </>
       )}
 
-      {/* === Nessun evento trovato === */}
       {!isLoading && filteredEvents.length === 0 && (
-        <p className="no-events-text">
-          Nessun evento disponibile per questa città.
-        </p>
+        <p className="no-events-text">Nessun evento disponibile per questa città.</p>
       )}
     </div>
   );

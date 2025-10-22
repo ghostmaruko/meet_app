@@ -17,22 +17,28 @@ const EventItem = ({ event }) => {
   return (
     <li className="event-item">
       <h3>{event.summary}</h3>
-      <p>
+      <p className="event-time">
         {event.start?.dateTime
           ? new Date(event.start.dateTime).toLocaleString()
           : ""}
       </p>
-      <p>{event.location}</p>
-      <a href={event.htmlLink} target="_blank" rel="noopener noreferrer">
-        View Event
-      </a>
-      <button
-        onClick={() => setShowDetails(!showDetails)}
-        className="show-details-btn"
-      >
-        {showDetails ? "Hide Details" : "Show Details"}
-      </button>
-      {showDetails && <p>{event.description}</p>}
+      <p className="event-location">{event.location}</p>
+
+      <div className="event-actions">
+        <a href={event.htmlLink} target="_blank" rel="noopener noreferrer">
+          View Event
+        </a>
+        <button
+          onClick={() => setShowDetails(!showDetails)}
+          className="show-details-btn"
+        >
+          {showDetails ? "Hide Details" : "Show Details"}
+        </button>
+      </div>
+
+      {showDetails && (
+        <p className="event-description">{event.description}</p>
+      )}
     </li>
   );
 };

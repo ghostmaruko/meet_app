@@ -49,30 +49,62 @@ input[type="number"]:focus {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  list-style: none;
+  padding: 0;
 }
 
-.event {
+.event-item {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  padding: 16px 20px;
+  padding: 18px 22px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.event:hover {
+.event-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
 }
 
-.event h3 {
+.event-item h3 {
   margin: 0 0 8px;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #222;
 }
 
-.event p {
+.event-time,
+.event-location {
   margin: 4px 0;
   color: #555;
+  font-size: 0.95rem;
+}
+
+.event-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.event-actions a {
+  text-decoration: none;
+  color: #0078d7;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.event-actions a:hover {
+  color: #005ea6;
+}
+
+.event-description {
+  margin-top: 10px;
+  color: #444;
+  line-height: 1.5;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 0.95rem;
 }
 
 /* ======== Buttons ======== */
@@ -138,5 +170,10 @@ button:hover {
   #number-of-events {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .event-actions {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

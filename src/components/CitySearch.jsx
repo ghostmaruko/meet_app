@@ -1,4 +1,3 @@
-// src/components/CitySearch.jsx
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 
@@ -21,7 +20,6 @@ const CitySearch = ({ allLocations = [], onCitySelect, setInfoAlert }) => {
       infoText = "We cannot find the city you’re looking for. Please try another city.";
     }
     setInfoAlert(infoText);
-
     onCitySelect(value);
   };
 
@@ -30,7 +28,7 @@ const CitySearch = ({ allLocations = [], onCitySelect, setInfoAlert }) => {
     setQuery(value);
     setShowSuggestions(false);
     onCitySelect(value);
-    setInfoAlert(""); // rimuove l'alert quando clicchi su un suggerimento valido
+    setInfoAlert("");
   };
 
   return (

@@ -16,28 +16,24 @@ const NumberOfEvents = ({
   const handleChange = (e) => {
     const value = parseInt(e.target.value, 10);
 
-    // Se non è un numero
     if (isNaN(value)) {
       setErrorAlert("Please enter a valid number.");
       setWarningAlert("");
       return;
     }
 
-    // Se è <= 0 → warning
     if (value <= 0) {
       setWarningAlert("Please enter a number greater than zero.");
       setErrorAlert("");
       return;
     }
 
-    // Se è > 100 → error
     if (value > 100) {
       setErrorAlert("Number too large. Please enter 100 or less.");
       setWarningAlert("");
       return;
     }
 
-    // Se tutto è valido → pulisci gli alert e aggiorna il numero
     setErrorAlert("");
     setWarningAlert("");
     setNumber(value);
